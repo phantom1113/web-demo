@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
-import { Router, Route, Redirect } from 'react-router';
+import { Router, Route, Redirect, withRouter } from 'react-router';
 import { createBrowserHistory } from "history";
 
 
@@ -48,7 +48,7 @@ function NoMatch() {
 const RoutedApp = () => (
   <Router history={history} >
     <Redirect from="/" to="/issues" />
-    <Route exact path="/issues" component={IssueList} />
+    <Route exact path="/issues" component={withRouter(IssueList)} />
     <Route exact path="/issues/:id" component={IssueEdit} />
   </Router>
 )

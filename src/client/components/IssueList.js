@@ -10,6 +10,7 @@ export default class IssueList extends React.Component {
         super();
         this.state = { issues: [] };
         this.createIssue = this.createIssue.bind(this);
+        this.setFilter = this.setFilter.bind(this);
     }
     componentDidUpdate(prevProps) {
         const oldQuery = prevProps.location.search.split('=');
@@ -23,10 +24,10 @@ export default class IssueList extends React.Component {
         this.loadData();
     }
     loadData() {
-        const status = this.props.location.search.split('=');
+        const { status }  = this.props.history.location.query || "";
         axios.get("api/issues", {
             params: {
-                status: status[1]
+                status: status
             }
         })
             .then(res => {
@@ -40,9 +41,14 @@ export default class IssueList extends React.Component {
             })
             .catch(err => console.log(err))
     }
+
+    setFilter(query){
+        this.props.history.push({ pathname: this.props.location.pathname, query });
+        this.loadData();
+    }
+
     createIssue(newIssue) {
         const { title, owner } = newIssue;
-        console.log(title);
         axios.post("api/issues", {
             title,
             owner
@@ -62,7 +68,7 @@ export default class IssueList extends React.Component {
         return (
             <div>
                 <h1>Issue Tracker</h1>
-                <IssueFilter />
+                <IssueFilter setFilter={this.setFilter} />
                 <hr />
                 <IssueTable issues={this.state.issues} />
                 <hr />
